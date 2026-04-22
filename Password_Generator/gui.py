@@ -52,9 +52,25 @@ class PasswordGeneratorGUI:
             pady=8
         ).pack(fill="x", padx=30, pady=5)
 
-        # Settings Section
         self.settings_frame = tk.Frame(self.root, bg="#1e1e2e", pady=20)
         self.settings_frame.pack(fill="both")
+
+        # Preset Buttons
+        tk.Label(
+            self.settings_frame, text="Quick Select:", font=self.label_font,
+            fg="#6c7086", bg="#1e1e2e"
+        ).pack()
+        
+        self.preset_frame = tk.Frame(self.settings_frame, bg="#1e1e2e")
+        self.preset_frame.pack(pady=10)
+
+        for level, color in [("Easy", "#a6e3a1"), ("Medium", "#fab387"), ("Hard", "#f38ba8")]:
+            tk.Button(
+                self.preset_frame, text=level, command=lambda l=level: self.apply_preset(l),
+                font=self.btn_font, bg="#313244", fg=color,
+                activebackground=color, activeforeground="#1e1e2e",
+                width=10, borderwidth=0, cursor="hand2", padx=5, pady=5
+            ).pack(side="left", padx=5)
 
         # Length Slider
         tk.Label(
@@ -90,13 +106,31 @@ class PasswordGeneratorGUI:
         )
         self.strength_label.pack()
 
-        # Big Generate Button
         tk.Button(
             self.root, text="GENERATE NEW", command=self.generate,
             font=self.btn_font, bg="#a6e3a1", fg="#1e1e2e",
             activebackground="#94e2d5", borderwidth=0, cursor="hand2",
             pady=12
         ).pack(fill="x", padx=30, pady=20)
+
+    def apply_preset(self, level):
+        if level == "Easy":
+            self.length_var.set(8)
+            self.upper_var.set(True)
+            self.digits_var.set(False)
+            self.special_var.set(False)
+        elif level == "Medium":
+            self.length_var.set(12)
+            self.upper_var.set(True)
+            self.digits_var.set(True)
+            self.special_var.set(False)
+        elif level == "Hard":
+            self.length_var.set(16)
+            self.upper_var.set(True)
+            self.digits_var.set(True)
+            self.special_var.set(True)
+        
+        self.generate()
 
     def generate(self, *args):
         length = self.length_var.get()
