@@ -17,6 +17,7 @@ class ToDoListGUI:
         # Fonts
         self.title_font = font.Font(family="Helvetica", size=24, weight="bold")
         self.item_font = font.Font(family="Helvetica", size=12)
+        self.hint_font = font.Font(family="Helvetica", size=10, slant="italic")
         self.button_font = font.Font(family="Helvetica", size=10, weight="bold")
         
         self.create_widgets()
@@ -41,6 +42,13 @@ class ToDoListGUI:
         )
         self.header.pack()
 
+        # Selection Hint
+        self.selection_hint = tk.Label(
+            self.root, text="Select a task to manage it:",
+            font=self.hint_font, fg="#6c7086", bg="#1e1e2e"
+        )
+        self.selection_hint.pack(pady=(0, 5))
+
         # Task List Area (Listbox + Scrollbar)
         self.listbox_frame = tk.Frame(self.root, bg="#1e1e2e")
         self.listbox_frame.pack(fill="both", expand=True, padx=20, pady=10)
@@ -56,6 +64,13 @@ class ToDoListGUI:
         )
         self.listbox.pack(fill="both", expand=True)
         self.scrollbar.config(command=self.listbox.yview)
+
+        # Input Instruction
+        self.input_instruction = tk.Label(
+            self.root, text="What needs to be done?",
+            font=self.item_font, fg="#bac2de", bg="#1e1e2e"
+        )
+        self.input_instruction.pack(pady=(20, 0))
 
         # Input Area
         self.entry_frame = tk.Frame(self.root, bg="#1e1e2e")
@@ -90,6 +105,14 @@ class ToDoListGUI:
         )
         self.delete_button.pack(side="left", expand=True, fill="x", padx=(5, 0))
 
+        # Status Bar
+        self.status_bar = tk.Label(
+            self.root, text=self.get_status_text(),
+            font=self.hint_font, fg="#6c7086", bg="#1e1e2e",
+            pady=10, relief="flat"
+        )
+        self.status_bar.pack(side="bottom", fill="x")
+
     def add_task(self):
         task = self.task_entry.get().strip()
         if task:
@@ -111,8 +134,25 @@ class ToDoListGUI:
 
     def refresh_listbox(self):
         self.listbox.delete(0, tk.END)
-        for task in self.tasks:
-            self.listbox.insert(tk.END, f" • {task}")
+        if not self.tasks:
+            self.listbox.insert(tk.END, "  --- No tasks yet! ---")
+            self.listbox.config(fg="#6c7086")
+        else:
+            self.listbox.config(fg="#cdd6f4")
+            for task in self.tasks:
+                self.listbox.insert(tk.END, f"  • {task}")
+        
+        if hasattr(self, 'status_bar'):
+            self.status_bar.config(text=self.get_status_text())
+
+    def get_status_text(self):
+        count = len(self.tasks)
+        if count == 0:
+            return "No tasks pending"
+        elif count == 1:
+            return "1 task pending"
+        else:
+            return f"{count} tasks pending"
 
 if __name__ == "__main__":
     root = tk.Tk()
