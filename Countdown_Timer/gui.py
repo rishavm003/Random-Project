@@ -5,7 +5,7 @@ class CountdownTimerGUI:
     def __init__(self, root):
         self.root = root
         self.root.title("Countdown Timer")
-        self.root.geometry("420x520")
+        self.root.geometry("480x540")
         self.root.configure(bg="#1e1e2e")
         self.root.resizable(False, False)
 
@@ -33,7 +33,7 @@ class CountdownTimerGUI:
 
         # Digital Display
         self.display_frame = tk.Frame(self.root, bg="#181825", pady=25)
-        self.display_frame.pack(fill="x", padx=30)
+        self.display_frame.pack(fill="x", padx=20)
 
         self.display_label = tk.Label(
             self.display_frame, text="00:00:00",
@@ -205,7 +205,7 @@ if __name__ == "__main__":
     root = tk.Tk()
     screen_w = root.winfo_screenwidth()
     screen_h = root.winfo_screenheight()
-    win_w, win_h = 420, 520
+    win_w, win_h = 480, 540
     x = (screen_w // 2) - (win_w // 2)
     y = (screen_h // 2) - (win_h // 2)
     root.geometry(f"{win_w}x{win_h}+{x}+{y}")
